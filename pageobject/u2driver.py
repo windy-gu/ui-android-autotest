@@ -121,7 +121,7 @@ class U2Driver(object):
         self.find_element(**kwargs)
         self.driver(**kwargs).set_text(text)
 
-    def find_element(self, index=0, **kwargs):
+    def find_element(self, **kwargs):
         if not kwargs:
             raise ValueError("Please specify a locator")
         if len(kwargs) > 1:
