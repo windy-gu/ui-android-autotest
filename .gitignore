@@ -1,3 +1,5 @@
 /.idea
 /.git
 /.pytest*
+/demo/report
+/docs
