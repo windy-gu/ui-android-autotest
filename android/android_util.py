@@ -3,8 +3,10 @@
 # date = 2020/6/1 17:37
 
 import os
+import time
 import unittest
 import uiautomator2 as u2
+from android import Android
 from seldom.logging.log import Log
 log = Log()
 
@@ -57,53 +59,58 @@ def get_connected_device():
     return device, j
 
 
-def check_staet():
-    if connect_count_state is True:
-        phone_light_res = os.popen(
-            'adb -s ' + self.serial_number + ' shell "dumpsys window policy|grep mScreenOnFully"')
-        light_res = phone_light_res.read()
-        if 'mScreenOnFully=false' in light_res:
-            put_log.info('当前手机设备屏幕处于亮起状态：%s' % phone_light_state)
-            os.popen('adb -s' + self.serial_number + ' shell input keyevent 26')  # 执行唤醒屏幕状态
-            put_log.info('执行唤醒屏幕adb shell input keyevent 26 命令，唤醒手机屏幕')
-            phone_light_state = True
-            put_log.info('当前手机设备屏幕处于亮起状态：%s' % phone_light_state)
-            check_phone_lock_state = True
+def check_state():
+    serial_number = Android().serial_number
 
-        elif 'mScreenOnFully=true' in light_res:
-            phone_light_state = True
-            put_log.info('当前手机设备屏幕处于亮起状态：%s' % phone_light_state)
-            check_phone_lock_state = True
+    phone_light_res = os.popen(
+        'adb -s ' + serial_number + ' shell "dumpsys window policy|grep screenState"')
+    light_res = phone_light_res.read()
+
+    if 'mScreenOnFully=false' in light_res:
+        log.info('当前手机设备屏幕处于亮起状态：%s' % phone_light_state)
+        os.popen('adb -s' + serial_number + ' shell input keyevent 26')  # 执行唤醒屏幕状态
+        log.info('执行唤醒屏幕adb shell input keyevent 26 命令，唤醒手机屏幕')
+        phone_light_state = True
+        log.info('当前手机设备屏幕处于亮起状态：%s' % phone_light_state)
+        check_phone_lock_state = True
+
+    elif 'mScreenOnFully=true' in light_res:
+        phone_light_state = True
+        log.info('当前手机设备屏幕处于亮起状态：%s' % phone_light_state)
+        check_phone_lock_state = True
 
     if check_phone_lock_state is True:
         lock_state = os.popen(
-            'adb -s ' + self.serial_number + ' shell "dumpsys window policy|grep isStatusBarKeyguard"')
+            'adb -s ' + serial_number + ' shell "dumpsys window policy|grep isStatusBarKeyguard"')
         lock_res = lock_state.read()
         if 'isStatusBarKeyguard=false' in lock_res:
-            put_log.info('当前手机设备是否处于锁屏状态：%s' % phone_lock_state)
+            log.info('当前手机设备是否处于锁屏状态：%s' % phone_lock_state)
             return True
         else:
             phone_lock_state = True
-            put_log.warning('当前手机设备是否处于锁屏状态：%s，请手动解锁屏幕后，10s等待后程序自动执行' % phone_lock_state)
+            log.warn('当前手机设备是否处于锁屏状态：%s，请手动解锁屏幕后，10s等待后程序自动执行' % phone_lock_state)
 
             for i in range(0, 10):
                 time.sleep(10)
                 check_lock_state1 = os.popen(
-                    'adb -s ' + self.serial_number + ' shell "dumpsys window policy|grep isStatusBarKeyguard"')
+                    'adb -s ' + serial_number + ' shell "dumpsys window policy|grep isStatusBarKeyguard"')
                 if 'isStatusBarKeyguard=false' in check_lock_state1.read():
                     phone_lock_state = False
-                    put_log.info('当前手机设备是否处于锁屏状态：%s' % phone_lock_state)
+                    log.info('当前手机设备是否处于锁屏状态：%s' % phone_lock_state)
                     break
                 else:
                     if i >= 9:
-                        put_log.error('第%s次校验后仍处于锁屏状态，中断测试' % str(i + 1))
+                        log.error('第%s次校验后仍处于锁屏状态，中断测试' % str(i + 1))
                         raise Exception('当前手机设备处于锁屏状态，中断测试')
 
                     else:
-                        put_log.warning('第%s次校验仍处于锁屏状态....进入到下一次校验过程' % str(i + 1))
+                        log.warn('第%s次校验仍处于锁屏状态....进入到下一次校验过程' % str(i + 1))
                         continue
             if phone_lock_state is False:
                 return True
 
 
             # adb shell dumpsys window policy
+
+if __name__ == '__main__':
+    a = check_state()
