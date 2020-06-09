@@ -23,7 +23,7 @@ class U2Test(unittest.TestCase):
         else:
             self.driver = start_u2_server()
 
-        if not check_state():
+        if not check_screen_state():
             dr = U2Driver(self.driver)
             dr.swipe_up()
 
@@ -63,7 +63,7 @@ def get_connected_device():
     return device, j
 
 
-def check_state():
+def check_screen_state():
     serial_number = Android().serial_number
     screen_state = False
     phone_light_res = os.popen(
@@ -78,13 +78,10 @@ def check_state():
     elif 'screenState=SCREEN_STATE_OFF' in screen_state_data or 'screenState=0' in screen_state_data:
         log.info('当前手机屏幕状态：Screen Off')
         os.popen('adb -s ' + serial_number + ' shell input keyevent 26')
+        log.info('adb 命令唤醒屏幕')
         time.sleep(1)
         return screen_state
 
     else:
         log.error('Something error')
         raise Exception('Something error')
-
-
-if __name__ == '__main__':
-    a = check_state()
