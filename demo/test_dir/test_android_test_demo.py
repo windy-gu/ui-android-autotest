@@ -1,6 +1,6 @@
 import seldom
 from android import Page
-from android.android_util import U2Test
+from android.android_u2_test import U2Test
 from pageobject.u2driver import U2Driver
 
 

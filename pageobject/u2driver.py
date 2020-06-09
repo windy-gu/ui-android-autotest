@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # author = Administrator
 # date = 2020/6/2 10:46
+import time
 from seldom.logging.log import Log
 
 LOCATOR_LIST = [
@@ -36,8 +37,9 @@ class U2Driver(object):
     def __init__(self, driver):
         self.driver = driver
         self.log = Log()
-    # driver = None
-    # log = Log()
+        self.size = self.driver.window_size()
+        self.width = self.size[0]
+        self.height = self.size[1]
 
     def install_app_url(self, url: str):
         """
@@ -106,6 +108,46 @@ class U2Driver(object):
 
     def screen_off(self):
         self.driver.screen_off()
+        
+    def swipe_up(self, wait_time=0.1, times=1):
+        """向上滑动屏幕"""
+        x1 = self.width * 0.5
+        y1 = self.height * 0.75
+        y2 = self.height * 0.25
+        self.log.info('向上滑动屏幕:%s次' % times)
+        for i in range(times):
+            self.driver.drag(x1, y1, x1, y2, wait_time)
+            time.sleep(1)
+
+    def swipe_down(self, wait_time=0.1, times=1):
+        """向下滑动屏幕"""
+        x1 = self.width * 0.5
+        y1 = self.height * 0.25
+        y2 = self.height * 0.75
+        self.log.info('向下滑动屏幕:%s次' % times)
+        for i in range(times):
+            self.driver.drag(x1, y1, x1, y2, wait_time)
+            time.sleep(1)
+
+    def swipe_left(self, wait_time=0.1, times=1):
+        """向左滑动屏幕"""
+        x1 = self.width * 0.85
+        y1 = self.height * 0.5
+        x2 = self.width * 0.15
+        self.log.info('向左滑动屏幕:%s次' % times)
+        for i in range(times):
+            self.driver.drag(x1, y1, x2, y1, wait_time)
+            time.sleep(1)
+
+    def swipe_right(self, wait_time=0.1, times=1):
+        """向右滑动屏幕"""
+        x1 = self.width * 0.25
+        y1 = self.height * 0.5
+        x2 = self.height * 0.75
+        self.log.info('向右滑动屏幕:%s次' % times)
+        for i in range(times):
+            self.driver.drag(x1, y1, x2, y1, wait_time)
+            time.sleep(1)
 
     def click_element(self, **kwargs):
         self.find_element(**kwargs)
