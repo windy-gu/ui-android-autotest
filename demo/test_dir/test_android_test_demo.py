@@ -1,5 +1,5 @@
 import seldom
-from android import Page
+from android.util import os_popen
 from android.android_u2_test import U2Test
 from pageobject.u2driver import U2Driver
 
@@ -40,6 +40,10 @@ class MerchantTest(U2Test):
         # page.search_button.click()
         page = MerchantOrderPage(self.driver)
         page.click_button()
+
+    def check_package_install_state(self, package_name: str):
+        res = os_popen(data='')
+        pass
 
 
 if __name__ == '__main__':

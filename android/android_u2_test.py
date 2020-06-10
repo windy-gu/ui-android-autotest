@@ -2,17 +2,18 @@
 # author = Administrator
 # date = 2020/6/1 17:37
 
-import os
 import time
 import unittest
 import uiautomator2 as u2
 from android import Android
-from pageobject.u2driver import U2Driver
+from android.util import os_popen
 from seldom.logging.log import Log
+from pageobject.u2driver import U2Driver
 log = Log()
 
 
 class U2Test(unittest.TestCase):
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.driver = start_u2_server()
@@ -48,8 +49,7 @@ def start_u2_server():
 
 
 def get_connected_device():
-    result = os.popen('adb devices')  # 这里通过调用adb devices 命令，获取当前已经连接的设备
-    res = result.read()
+    res = os_popen(data='adb devices')  # 这里通过调用adb devices 命令，获取当前已经连接的设备
     i = 0
     j = 0
     device = []
@@ -66,9 +66,7 @@ def get_connected_device():
 def check_screen_state():
     serial_number = Android().serial_number
     screen_state = False
-    phone_light_res = os.popen(
-        'adb -s ' + serial_number + ' shell "dumpsys window policy|grep screenState"')
-    screen_state_data = phone_light_res.read()
+    screen_state_data = os_popen(data='adb -s ' + serial_number + ' shell "dumpsys window policy|grep screenState"')
 
     if 'screenState=SCREEN_STATE_ON' in screen_state_data or 'screenState=2' in screen_state_data:
         log.info('当前手机屏幕状态：Screen On')
@@ -77,7 +75,7 @@ def check_screen_state():
 
     elif 'screenState=SCREEN_STATE_OFF' in screen_state_data or 'screenState=0' in screen_state_data:
         log.info('当前手机屏幕状态：Screen Off')
-        os.popen('adb -s ' + serial_number + ' shell input keyevent 26')
+        os_popen(data='adb -s ' + serial_number + ' shell input keyevent 26')
         log.info('adb 命令唤醒屏幕')
         time.sleep(1)
         return screen_state
