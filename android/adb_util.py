@@ -4,15 +4,18 @@
 import os
 
 
-def os_popen(data: str, type: str='read'):
+def os_popen(data: str, type: str = 'read'):
     """
     命令行中执行adb等语句，并返回对应的执行结果
     :param data:
+    :param type:
     :return:
     """
     if '' == data:
-        pass
+        return False
     else:
+        if '\\' in data:
+            data = data.replace('\\', '/')
         if 'adb' in data:
             data = adb_add_serial_number(data)
         with os.popen(data, 'r') as p:
@@ -29,11 +32,113 @@ def check_package_install_state(package_name: str):
     :param package_name: 包名
     :return:
     """
-    check_package = 'adb shell "pm list package -3 | grep %s"' % package_name
-    if package_name in os_popen(check_package):
+    script = 'adb shell "pm list package -3 | grep %s"' % package_name
+    if package_name in os_popen(script):
         return True
     else:
         return False
+
+
+def check_package_process_state(package_name: str):
+    """
+    校验package_name 对应的包名的进程是否存活
+    :param package_name:
+    :return:
+    """
+    script = 'adb shell " ps | grep %s"' % package_name
+    if package_name in os_popen(script):
+        return True
+    else:
+        return False
+
+
+def adb_uninstall(package_name: str):
+    """
+    通过adb命令卸载指定安装包
+    :param package_name:
+    :return:
+    """
+    script = 'adb uninstall %s' % package_name
+    execute_script = os_popen(script)
+    if 'Success' in execute_script:
+        return True
+    elif 'Unknown package' in execute_script:
+        return False
+    else:
+        return False
+
+
+def adb_install(filepath: str):
+    """
+
+    :param filepath:
+    :return:
+    """
+    script = 'adb install %s' % filepath
+    execute_script = os_popen(script)
+    if 'Success' in execute_script:
+        return True
+    elif 'Failure' in execute_script:
+        return False
+    else:
+        return False
+
+
+def adb_pull(source_filepath: str, target_filepath: str):
+    """
+
+    :param source_filepath:
+    :param target_filepath:
+    :return:
+    """
+    script = 'adb pull %s %s' % (source_filepath, target_filepath)
+    execute_script = os_popen(script)
+    if 'pulled' in execute_script:
+        return True
+    else:
+        return False
+
+
+def adb_push(source_filepath: str, target_filepath: str):
+    """
+
+    :param source_filepath:
+    :param target_filepath:
+    :return:
+    """
+    script = 'adb push %s %s' % (source_filepath, target_filepath)
+    execute_script = os_popen(script)
+    if 'pushed' in execute_script:
+        return True
+    else:
+        return False
+
+
+def adb_screencap(target_filepath: str):
+    """
+    默认在手机设备中 /sdcard/screenshot.png
+    :param target_filepath:
+    :return:
+    """
+    script_screencap = 'adb shell /system/bin/screencap -p /sdcard/screenshot.png'
+    execute_script_screencap = os_popen(script_screencap)
+    if 'not found' in execute_script_screencap:
+        raise Exception('Screen Failure')
+    screen_filepath = '/sdcard/screenshot.png'
+    script_push_state = adb_push(screen_filepath, target_filepath)
+    if script_push_state:
+        return True
+    else:
+        return False
+
+
+def adb_screenrecord(target_filepath: str):
+    """
+
+    :param target_filepath:
+    :return:
+    """
+    pass
 
 
 def adb_add_serial_number(data: str):
@@ -53,16 +158,16 @@ def adb_add_serial_number(data: str):
     return res
 
 
-def screen_state():
+def adb_screen_state():
     """
     通过adb命令获取手机屏幕的状态信息
     :return:
     """
-    data = os_popen('adb shell dumpsys window policy|find "screenState"').strip()
+    data = os_popen('adb shell dumpsys window policy|find "screenState"').strip()  # strip()去除首位空格
     return data
 
 
-def phone_brand():
+def adb_phone_brand():
     """
     通过adb命令获取手机品牌信息
     :return:
@@ -71,7 +176,7 @@ def phone_brand():
     return brand
 
 
-def phone_model():
+def adb_phone_model():
     """
     通过adb命令获取手机型号信息
     :return:
@@ -80,7 +185,7 @@ def phone_model():
     return model
 
 
-def phone_android_version():
+def adb_phone_android_version():
     """
     通过adb命令获取手机-android 系统版本
     :return:
@@ -89,7 +194,7 @@ def phone_android_version():
     return version
 
 
-def phone_resolution():
+def adb_phone_resolution():
     """
     通过adb命令获取手机分辨率
     :return:
@@ -103,7 +208,7 @@ def phone_resolution():
     return resolution
 
 
-def phone_info():
+def adb_phone_info():
     """
     通过adb命令获取手机相关信息
     :return:
@@ -112,7 +217,7 @@ def phone_info():
     return info
 
 
-def phone_imei():
+def adb_phone_imei():
     """
     通过adb命令获取手机imei信息
     :return:
@@ -129,9 +234,6 @@ def phone_imei():
 
 
 if __name__ == '__main__':
-    print(phone_brand())
-    print(phone_model())
-    print(phone_imei())
-    # print(phone_serial_number())
-    print(phone_android_version())
-    print(phone_resolution())
+    print(adb_install('C:\\Users\\Administrator\\Downloads\\0b1214b56924b106bbf0ceef30b570db.apk'))
+    # print(check_package_process_state('com.kh_super.android.supermerchant'))
+
