@@ -1,7 +1,7 @@
 import seldom
-from android.util import os_popen
+from android.adb_util import os_popen
 from android.android_u2_test import U2Test
-from pageobject.u2driver import U2Driver
+from android.u2driver import U2Driver
 
 
 class MerchantOrderPage(U2Driver):
