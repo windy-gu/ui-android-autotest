@@ -5,7 +5,6 @@
 import time
 import unittest
 import uiautomator2 as u2
-from android import Android
 from android.adb_util import os_popen
 from seldom.logging.log import Log
 from android.u2driver import U2Driver
@@ -64,7 +63,6 @@ def get_connected_device():
 
 
 def check_screen_state():
-    serial_number = Android().serial_number
     screen_state = False
     screen_state_data = os_popen(data='adb shell "dumpsys window policy|grep screenState"')
 
@@ -75,7 +73,7 @@ def check_screen_state():
 
     elif 'screenState=SCREEN_STATE_OFF' in screen_state_data or 'screenState=0' in screen_state_data:
         log.info('当前手机屏幕状态：Screen Off')
-        os_popen(data='adb -s ' + serial_number + ' shell input keyevent 26')
+        os_popen(data='adb shell input keyevent 26')
         log.info('adb 命令唤醒屏幕')
         time.sleep(1)
         return screen_state
