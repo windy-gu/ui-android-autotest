@@ -2,6 +2,9 @@
 # author = Administrator
 # date = 2020/6/10 11:29
 import os
+from seldom.logging.log import Log
+
+log = Log()
 
 
 def os_popen(data: str, type: str = 'read'):
@@ -34,8 +37,10 @@ def check_package_install_state(package_name: str):
     """
     script = 'adb shell "pm list package -3 | grep %s"' % package_name
     if package_name in os_popen(script):
+        log.info('当前测试手机中存在应用，包名：%s' % package_name)
         return True
     else:
+        log.warn('当前测试手机未找到应用，包名：%s' % package_name)
         return False
 
 
@@ -47,46 +52,54 @@ def check_package_process_state(package_name: str):
     """
     script = 'adb shell " ps | grep %s"' % package_name
     if package_name in os_popen(script):
+        log.info('当前测试手机中应用进程存活，包名：%s' % package_name)
         return True
     else:
+        log.warn('当前测试手机未找到应用进程，包名：%s' % package_name)
         return False
 
 
 def adb_uninstall(package_name: str):
     """
-    通过adb命令卸载指定安装包
-    :param package_name:
+    通过adb命令卸载指定应用
+    :param package_name:包名
     :return:
     """
     script = 'adb uninstall %s' % package_name
     execute_script = os_popen(script)
     if 'Success' in execute_script:
+        log.info('卸载应用包名：%s' % package_name)
         return True
     elif 'Unknown package' in execute_script:
+        log.warn('未找到卸载应用包名：%s' % package_name)
         return False
     else:
+        log.warn('未知异常')
         return False
 
 
 def adb_install(filepath: str):
     """
-
-    :param filepath:
+    通过adb命令安装指定安装包
+    :param filepath:安装包文件路径（包括具体的文件名称）
     :return:
     """
     script = 'adb install %s' % filepath
     execute_script = os_popen(script)
     if 'Success' in execute_script:
+        log.info('安装应用成功，安装包路径：%s' % filepath)
         return True
     elif 'Failure' in execute_script:
+        log.warn('安装应用失败，安装包路径：%s' % filepath)
         return False
     else:
+        log.warn('未知异常')
         return False
 
 
 def adb_pull(source_filepath: str, target_filepath: str):
     """
-
+    通过adb命令将移动设备中文件，复制到电脑中的指定路径
     :param source_filepath:
     :param target_filepath:
     :return:
@@ -94,14 +107,18 @@ def adb_pull(source_filepath: str, target_filepath: str):
     script = 'adb pull %s %s' % (source_filepath, target_filepath)
     execute_script = os_popen(script)
     if 'pulled' in execute_script:
+        log.info('文件 从手机设备拉取到 电脑端 Success，手机设备文件源路径：%s，电脑端存放目标路径：%s'
+                 % (source_filepath, target_filepath))
         return True
     else:
+        log.warn('文件 从手机设备拉取到电脑端 Failure，手机设备文件源路径：%s，电脑端存放目标路径：%s'
+                 % (source_filepath, target_filepath))
         return False
 
 
 def adb_push(source_filepath: str, target_filepath: str):
     """
-
+    通过adb命令将电脑中文件，推到移动设备中的指定路径
     :param source_filepath:
     :param target_filepath:
     :return:
@@ -109,8 +126,12 @@ def adb_push(source_filepath: str, target_filepath: str):
     script = 'adb push %s %s' % (source_filepath, target_filepath)
     execute_script = os_popen(script)
     if 'pushed' in execute_script:
+        log.info('文件 从电脑端推送到 手机设备 Success，电脑端文件源路径：%s，手机设备存放目标路径：%s'
+                 % (source_filepath, target_filepath))
         return True
     else:
+        log.warn('文件 从电脑端推送到 手机设备 Failure，电脑端文件源路径：%s，手机设备存放目标路径：%s'
+                 % (source_filepath, target_filepath))
         return False
 
 
@@ -123,7 +144,10 @@ def adb_screencap(target_filepath: str):
     script_screencap = 'adb shell /system/bin/screencap -p /sdcard/screenshot.png'
     execute_script_screencap = os_popen(script_screencap)
     if 'not found' in execute_script_screencap:
+        log.error('截图失败')
         raise Exception('Screen Failure')
+    else:
+        log.info('截图成功，截图存放目录：/sdcard/screenshot.png')
     screen_filepath = '/sdcard/screenshot.png'
     script_push_state = adb_push(screen_filepath, target_filepath)
     if script_push_state:
@@ -147,7 +171,7 @@ def adb_add_serial_number(data: str):
     :param data: adb查询语句
     :return:
     """
-    if 'adb devices' in data:
+    if 'adb devices' in data or 'adb kill-server' in data or 'adb start-server' in data:
         return data
     split_data = data.split(' ', 1)
     serial_number = ' -s '+os.popen('adb devices').read().split('\n')[1].split('\t')[0] + ' '
@@ -165,6 +189,23 @@ def adb_screen_state():
     """
     data = os_popen('adb shell dumpsys window policy|find "screenState"').strip()  # strip()去除首位空格
     return data
+
+
+def adb_kill_server():
+    """
+    通过adb命令kill 掉adb server
+    :return:
+    """
+    os_popen('adb kill-server')
+    pass
+
+
+def adb_start_server():
+    """
+    通过adb命令启用 掉adb server
+    :return:
+    """
+    pass
 
 
 def adb_phone_brand():
