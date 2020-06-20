@@ -10,6 +10,8 @@ if __name__ == '__main__':
 
 '''
 说明：
+test_type ： 测试类型android/web
+test_package ： 测试包名，用于校验测试设备是否安装对应的应用，进程是否存活
 path ： 指定测试目录。
 browser: 指定浏览，默认chrome。
 report：日志报告文件名称&格式，若为空，则默认report+时间+.html，并且在当前生成reports文件夹
