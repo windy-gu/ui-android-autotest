@@ -1,11 +1,11 @@
 # coding=utf-8
 import os
 import time
-import unittest
 import inspect
-from ..logging.log import Log
-from ..driver import browser as b
-from .HTMLTestRunner import HTMLTestRunner
+import unittest
+from seldom.logging.log import Log
+from seldom.driver import browser as b
+from seldom.running.HTMLTestRunner import HTMLTestRunner
 
 seldom_str = """
             _      _                   
@@ -62,6 +62,7 @@ def main(test_type='web',
     :param grid_url:
     :return:
     """
+
     if test_type == 'web':
         if path is None:
             stack_t = inspect.stack()

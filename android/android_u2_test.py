@@ -5,7 +5,7 @@
 import time
 import unittest
 import uiautomator2 as u2
-from android.adb_util import os_popen
+from android.adb_util import *
 from seldom.logging.log import Log
 from android.u2driver import U2Driver
 log = Log()
