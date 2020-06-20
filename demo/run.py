@@ -6,7 +6,7 @@ if __name__ == '__main__':
     #             title="百度测试用例",
     #             description="测试环境：Firefox",
     #             rerun=0)
-    seldom.main(test_type='android', path="./test_dir", debug=False, rerun=1)
+    seldom.main(test_type='android', test_package='com.kh_super.android.superapp', path="./test_dir", debug=False, rerun=1)
 
 '''
 说明：

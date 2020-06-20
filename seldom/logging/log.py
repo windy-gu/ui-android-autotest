@@ -77,7 +77,7 @@ class Log():
     def print_console(self, level, message):
         # 创建一个log
         # log_file_path = Method().output_dir('log') + time.strftime('%Y-%m-%d-%H') + '.log'
-        log_file_path = (os.path.dirname(os.path.dirname(__file__))) + '/' \
+        log_file_path = (os.path.dirname(os.path.dirname(__file__))) + '\\' \
                         + time.strftime('%Y-%m-%d') + '.log'  # log文件目录
 
         logger = logging.getLogger(__name__)
@@ -107,7 +107,7 @@ class Log():
             logger.info(message)
         elif level == 'debug':
             logger.debug(message)
-        elif level == 'warning':
+        elif level == 'warn':
             logger.warning(message)
         elif level == 'error':
             logger.error(message)

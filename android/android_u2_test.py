@@ -6,6 +6,7 @@ import time
 import unittest
 import uiautomator2 as u2
 from android.adb_util import *
+from android.public_util import Config
 from seldom.logging.log import Log
 from android.u2driver import U2Driver
 log = Log()
@@ -16,6 +17,10 @@ class U2Test(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.driver = start_u2_server()
+        conf = Config()
+        test_package = conf.get_config_info(section='android_test', option='auto_test_package')
+        if not check_package_install_state(test_package):
+            pass
 
     def setUp(self) -> None:
         if self.driver:
@@ -81,3 +86,24 @@ def check_screen_state():
     else:
         log.error('Something error')
         raise Exception('Something error')
+
+
+def check_app_install_state(package: str):
+    install_info = os_popen(data='adb shell "pm list package -3 | grep %s"' % package)
+    if package in install_info:
+        log.info('包名：%s，所对应的应用已经安装在当前的测试设备中' % package)
+        return True
+    else:
+        log.warn('包名：%s，所对应的应用未安装在当前的测试设备中' % package)
+        return False
+
+
+def check_app_process(package: str):
+    process_info = os_popen(data='adb shell " ps | grep %s"' % package)
+    if package in process_info:
+        log.info('包名：%s，所对应的应用进程存活' % package)
+        return True
+    else:
+        log.warn('包名：%s，所对应的应用进程不存在' % package)
+        return False
+

@@ -4,33 +4,33 @@
 import time
 from seldom.logging.log import Log
 
-LOCATOR_LIST = [
-    "text",
-    "textContains",
-    "textMatches",
-    "textStartsWith",
-    "className",
-    "classNameMatches",
-    "description",
-    "descriptionContains",
-    "descriptionMatches",
-    "descriptionStartsWith",
-    "checkable",
-    "checked",
-    "clickable",
-    "longClickable",
-    "scrollable",
-    "enabled",
-    "focusable",
-    "focused",
-    "selected",
-    "packageName",
-    "packageNameMatches",
-    "resourceId",
-    "resourceIdMatches",
-    "index",
-    "instance",
-]
+LOCATOR_LIST = {
+    "text": "text",
+    "textContains": "textContains",
+    "textMatches": "textMatches",
+    "textStartsWith": "textStartsWith",
+    "className": "className",
+    "classNameMatches": "classNameMatches",
+    "description": "description",
+    "descriptionContains": "descriptionContains",
+    "descriptionMatches": "descriptionMatches",
+    "descriptionStartsWith": "descriptionStartsWith",
+    "checkable": "checkable",
+    "checked": "checked",
+    "clickable": "clickable",
+    "longClickable": "longClickable",
+    "scrollable": "scrollable",
+    "enabled": "enabled",
+    "focusable": "focusable",
+    "focused": "focused",
+    "selected": "selected",
+    "packageName": "packageName",
+    "packageNameMatches": "packageNameMatches",
+    "resourceId": "resourceId",
+    "resourceIdMatches": "resourceIdMatches",
+    "index": "index",
+    "instance": "instance"
+}
 
 
 class U2Driver(object):
@@ -150,18 +150,16 @@ class U2Driver(object):
             time.sleep(1)
 
     def click_element(self, **kwargs):
-        self.find_element(**kwargs)
         by, value = next(iter(kwargs.items()))
-        if self.driver(**kwargs).exists:
+        if self.find_element(**kwargs):
             self.driver(**kwargs).click()
             self.log.info('点击元素,method:{}; value:{}'.format(by, value))
-        else:
-            self.log.error('Something error')
-            pass
 
     def write_element(self, text, **kwargs):
-        self.find_element(**kwargs)
-        self.driver(**kwargs).set_text(text)
+        by, value = next(iter(kwargs.items()))
+        if self.find_element(**kwargs):
+            self.driver(**kwargs).set_text(text)
+            self.log.info('元素, method:{}; value:{}, 输入:{}'.format(by, value, text))
 
     def find_element(self, **kwargs):
         if not kwargs:
@@ -173,6 +171,12 @@ class U2Driver(object):
             LOCATOR_LIST[by]
         except KeyError:
             raise ValueError("Element positioning of type '{}' is not supported. ".format(by))
+        else:
+            if self.driver(**kwargs).exists:
+                return True
+            else:
+                raise Exception('未找到元素，method:%s，value:%s' % (by, value))
+
 
 
 

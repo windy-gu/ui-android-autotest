@@ -3,6 +3,7 @@ import os
 import time
 import inspect
 import unittest
+from android.public_util import Config
 from seldom.logging.log import Log
 from seldom.driver import browser as b
 from seldom.running.HTMLTestRunner import HTMLTestRunner
@@ -18,6 +19,7 @@ seldom_str = """
                              @itest.info
 """
 log = Log()
+conf = Config()
 
 
 class Seldom:
@@ -37,6 +39,7 @@ class BrowserConfig:
 
 
 def main(test_type='web',
+         test_package=None,
          path=None,
          browser=None,
          report=None,
@@ -135,6 +138,8 @@ def main(test_type='web',
         Seldom.driver.quit()
 
     else:
+        if test_package is not None:
+            conf.update_config(update_data=test_package)
         if path is None:
             stack_t = inspect.stack()
             ins = inspect.getframeinfo(stack_t[1][0])

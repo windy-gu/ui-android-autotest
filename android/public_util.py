@@ -16,18 +16,36 @@ class Config():
         self.conf = configparser.ConfigParser()
 
     def read_config(self, config_path: str = ''):
+        """
+
+        :param config_path:
+        :return:
+        """
         if '' == config_path:
             config_path = self.config_path
         return self.conf.read(filenames=config_path, encoding='utf-8')
 
     def update_config(self, update_data: str, section: str = 'android_test', option: str = 'auto_test_package'):
-        # self.read_config()
+        """
+
+        :param update_data:
+        :param section:
+        :param option:
+        :return:
+        """
         ini_data = self.get_config_info(section=section, option=option)  # 获取配置文件中对应section下option 值
         if update_data != ini_data:
+            log.info('配置文件中测试包名：%s与自动化传入测试包名：%s，更新配置文件的测试包名' % (ini_data, update_data))
             self.conf.set(section=section, option=option, value=update_data)  # 修改配置文件中对应section下option 值
             self.conf.write(open(self.config_path, 'w'))
 
     def get_config_info(self, section: str, option: str):
+        """
+
+        :param section:
+        :param option:
+        :return:
+        """
         self.read_config()
         if self.conf.has_option(section=section, option=option):  # 判断配置文件中是否存在对应section, option 值
             ini_data = self.conf.get(section=section, option=option)
