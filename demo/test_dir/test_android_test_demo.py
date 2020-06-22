@@ -32,22 +32,11 @@ class MerchantTest(U2Test):
         :return:
         """
 
-        # self.implicitly_wait = 1
-        # page = BaiduPage(self.driver)
-        # page.get('http://www.baidu.com')
-        # # test = page.search_input
-        # page.search_input = search_key
-        # page.search_button.click()
         page = MerchantOrderPage(self.driver)
         page.click_button()
 
-    def check_package_install_state(self, package_name: str):
-        res = os_popen(data='')
-        pass
-
 
 if __name__ == '__main__':
-
     seldom.main(debug=True)
 
 

@@ -19,7 +19,11 @@ class U2Test(unittest.TestCase):
         cls.driver = start_u2_server()
         conf = Config()
         test_package = conf.get_config_info(section='android_test', option='auto_test_package')
-        if not check_package_install_state(test_package):
+        if check_package_install_state(test_package):
+            if check_package_process_state(test_package):
+                pass
+            pass
+        else:
             pass
 
     def setUp(self) -> None:

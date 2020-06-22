@@ -78,13 +78,13 @@ def adb_uninstall(package_name: str):
         return False
 
 
-def adb_install(filepath: str):
+def adb_install(filepath: str, mode: str):
     """
     通过adb命令安装指定安装包
     :param filepath:安装包文件路径（包括具体的文件名称）
     :return:
     """
-    script = 'adb install %s' % filepath
+    script = 'adb install -r %s' % filepath
     execute_script = os_popen(script)
     if 'Success' in execute_script:
         log.info('安装应用成功，安装包路径：%s' % filepath)
