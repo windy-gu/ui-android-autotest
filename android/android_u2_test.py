@@ -12,19 +12,16 @@ from android.adb_util import check_package_install_state, check_package_process_
 log = Log()
 
 
-class U2Test(unittest.TestCase):
+class U2Test(unittest.TestCase, U2Driver):
+    conf = Config()
+    test_package = conf.get_config_info(section='android_test', option='auto_test_package')
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.driver = start_u2_server()
-        conf = Config()
-        test_package = conf.get_config_info(section='android_test', option='auto_test_package')
-        if check_package_install_state(test_package):
-            if check_package_process_state(test_package):
-                pass
-            pass
-        else:
-            pass
+
+        if not check_package_install_state(cls.test_package):
+            cls.install_app_url()
 
     def setUp(self) -> None:
         if self.driver:
@@ -36,6 +33,9 @@ class U2Test(unittest.TestCase):
             dr = U2Driver(self.driver)
             dr.swipe_up()
 
+        if not check_package_process_state(self.test_package):
+            self.start_app(self.test_package)
+
 
 def start_u2_server():
     get_devices_data = get_connected_device()
@@ -45,6 +45,8 @@ def start_u2_server():
     if device_num == 1:
         log.info('连接设备：' + device_name + ',连接设备数量：' + str(device_num))
         driver = u2.connect(device_name)
+        driver.swipe_ext()
+        # driver.app_start()
         return driver
 
     elif device_num > 1:

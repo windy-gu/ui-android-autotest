@@ -31,6 +31,7 @@ LOCATOR_LIST = {
     "index": "index",
     "instance": "instance"
 }
+log = Log()
 
 
 class U2Driver(object):
@@ -48,16 +49,19 @@ class U2Driver(object):
         :return:
         """
         self.driver.app_install(url)
-        self.log.info('通过url链接安装app，链接地址：%s' % url)
+        log.info('通过url链接安装app，链接地址：%s' % url)
 
-    def start_app(self, package: str):
+    def start_app(self, package: str, stop: bool=False):
         """
         通过package，启动app进程
         :param package:
         :return:
         """
-        self.driver.app_start(package)
-        self.log.info('通过package名称，启动app进程，package：%s' % package)
+        if stop:
+            self.driver.app_start(package, stop=stop)
+        else:
+            self.driver.app_start(package)
+        log.info('通过package名称，启动app进程，package：%s' % package)
 
     def stop_app(self, package: str):
         """
@@ -66,7 +70,7 @@ class U2Driver(object):
         :return:
         """
         self.driver.app_stop(package)
-        self.log.info('通过package名称，关闭app进程，package：%s' % package)
+        log.info('通过package名称，关闭app进程，package：%s' % package)
 
     def clear_app(self, package: str):
         """
@@ -75,7 +79,7 @@ class U2Driver(object):
         :return:
         """
         self.driver.app_clear(package)
-        self.log.info('通过package名称，清除app数据，package：%s' % package)
+        log.info('通过package名称，清除app数据，package：%s' % package)
 
     def stop_all(self, excludes: list = None):
         """
@@ -114,7 +118,7 @@ class U2Driver(object):
         x1 = self.width * 0.5
         y1 = self.height * 0.75
         y2 = self.height * 0.25
-        self.log.info('向上滑动屏幕:%s次' % times)
+        log.info('向上滑动屏幕:%s次' % times)
         for i in range(times):
             self.driver.drag(x1, y1, x1, y2, wait_time)
             time.sleep(1)
@@ -124,7 +128,7 @@ class U2Driver(object):
         x1 = self.width * 0.5
         y1 = self.height * 0.25
         y2 = self.height * 0.75
-        self.log.info('向下滑动屏幕:%s次' % times)
+        log.info('向下滑动屏幕:%s次' % times)
         for i in range(times):
             self.driver.drag(x1, y1, x1, y2, wait_time)
             time.sleep(1)
@@ -134,7 +138,7 @@ class U2Driver(object):
         x1 = self.width * 0.85
         y1 = self.height * 0.5
         x2 = self.width * 0.15
-        self.log.info('向左滑动屏幕:%s次' % times)
+        log.info('向左滑动屏幕:%s次' % times)
         for i in range(times):
             self.driver.drag(x1, y1, x2, y1, wait_time)
             time.sleep(1)
@@ -144,7 +148,7 @@ class U2Driver(object):
         x1 = self.width * 0.25
         y1 = self.height * 0.5
         x2 = self.height * 0.75
-        self.log.info('向右滑动屏幕:%s次' % times)
+        log.info('向右滑动屏幕:%s次' % times)
         for i in range(times):
             self.driver.drag(x1, y1, x2, y1, wait_time)
             time.sleep(1)
@@ -153,13 +157,13 @@ class U2Driver(object):
         by, value = next(iter(kwargs.items()))
         if self.find_element(**kwargs):
             self.driver(**kwargs).click()
-            self.log.info('点击元素,method:{}; value:{}'.format(by, value))
+            log.info('点击元素,method:{}; value:{}'.format(by, value))
 
     def write_element(self, text, **kwargs):
         by, value = next(iter(kwargs.items()))
         if self.find_element(**kwargs):
             self.driver(**kwargs).set_text(text)
-            self.log.info('元素, method:{}; value:{}, 输入:{}'.format(by, value, text))
+            log.info('元素, method:{}; value:{}, 输入:{}'.format(by, value, text))
 
     def find_element(self, **kwargs):
         if not kwargs:

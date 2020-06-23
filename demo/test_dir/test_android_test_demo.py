@@ -27,12 +27,11 @@ class MerchantTest(U2Test):
     def test_click_switch(self):
         """
          used parameterized test
-        :param name: case name
-        :param search_key: search keyword
         :return:
         """
 
         page = MerchantOrderPage(self.driver)
+        page.click_element(**page.switch_order)
         page.click_button()
 
 
