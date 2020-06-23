@@ -21,7 +21,8 @@ class U2Test(unittest.TestCase, U2Driver):
         cls.driver = start_u2_server()
 
         if not check_package_install_state(cls.test_package):
-            cls.install_app_url()
+            # cls.install_app_url() 待补充
+            pass
 
     def setUp(self) -> None:
         if self.driver:
@@ -45,8 +46,6 @@ def start_u2_server():
     if device_num == 1:
         log.info('连接设备：' + device_name + ',连接设备数量：' + str(device_num))
         driver = u2.connect(device_name)
-        driver.swipe_ext()
-        # driver.app_start()
         return driver
 
     elif device_num > 1:
