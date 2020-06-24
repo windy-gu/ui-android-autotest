@@ -1,4 +1,5 @@
 import time
+from seldom.logging.log import Log
 
 LOCATOR_LIST = [
     "text",
@@ -27,6 +28,7 @@ LOCATOR_LIST = [
     "index",
     "instance",
 ]
+log = Log()
 
 
 class Page(object):
@@ -56,7 +58,7 @@ class PageElement(object):
         driver = instance.driver
         return self
 
-    def click(self):
+    def click(self, text=None):
         """
         click element
         """
@@ -69,6 +71,11 @@ class PageElement(object):
         else:
             raise NameError("No corresponding element was found")
         driver(**self.kwargs).click()
+        if text is not None:
+            log.info('点击:{describe},元素method:{method}; value:{value}'.
+                     format(describe=text, method=self.k, value=self.v))
+        else:
+            log.info('点击元素,method:{method}; value:{value}'.format(method=self.k, value=self.v))
 
     def set_text(self, text):
         """
@@ -84,6 +91,7 @@ class PageElement(object):
         else:
             raise NameError("No corresponding element was found")
         driver(**self.kwargs).set_text(text=text)
+        log.info('输入:{text},method:{method}; value:{value}'.format(text=text, method=self.k, value=self.v))
 
     def send_keys(self, text):
         """

@@ -1,17 +1,17 @@
 import seldom
 from android.adb_util import os_popen
-from android.android_u2_test import U2Test
 from android.u2driver import U2Driver
+from android.android_u2_test import U2Test
+from pageobject.u2 import Page, PageElement
 
 
-class MerchantOrderPage(U2Driver):
+class MerchantOrderPage(Page):
     """Baidu serach test case"""
 
     switch_order = {'resourceId': 'com.kh_super.android.supermerchant:id/switch_order'}
     # search_button = PageElement(xpath='//*[@id="su"]')
 
-    def click_button(self):
-        self.click_element(**self.switch_order)
+    switch_order_page = PageElement(describe='自动接单开关', **switch_order)
 
 
 class MerchantTest(U2Test):
@@ -24,15 +24,14 @@ class MerchantTest(U2Test):
     #     (2, 'selenium'),
     #     (3, 'unittest'),
     # ])
-    def atest_click_switch(self):
+    def test_click_switch(self):
         """
          used parameterized test
         :return:
         """
 
         page = MerchantOrderPage(self.driver)
-        page.click_element(**page.switch_order)
-        # page.click_button()
+        page.switch_order_page.click()
 
 
 if __name__ == '__main__':

@@ -94,7 +94,7 @@ class Log():
         ch.setLevel(logging.DEBUG)
 
         # 定义handler的输出格式
-        formatter = logging.Formatter('%(asctime)s - %(name)s- %(levelname)s - %(message)s')
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         fh.setFormatter(formatter)
         ch.setFormatter(formatter)
 

@@ -197,7 +197,6 @@ def adb_kill_server():
     :return:
     """
     os_popen('adb kill-server')
-    pass
 
 
 def adb_start_server():
@@ -205,7 +204,7 @@ def adb_start_server():
     通过adb命令启用 掉adb server
     :return:
     """
-    pass
+    os_popen('adb start-server')
 
 
 def adb_phone_brand():

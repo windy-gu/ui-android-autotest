@@ -15,7 +15,7 @@ log = Log()
 class U2Test(unittest.TestCase, U2Driver):
     conf = Config()
     test_package = conf.get_config_info(section='android_test', option='auto_test_package')
-
+    log = Log()
     @classmethod
     def setUpClass(cls) -> None:
         cls.driver = start_u2_server()
@@ -26,7 +26,7 @@ class U2Test(unittest.TestCase, U2Driver):
 
     def setUp(self) -> None:
         if self.driver:
-            log.info('校验当前连接设备是否具备执行自动化测试条件')
+            self.log.info('校验当前连接设备是否具备执行自动化测试条件')
         else:
             self.driver = start_u2_server()
 
