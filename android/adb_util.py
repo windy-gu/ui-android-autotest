@@ -78,13 +78,17 @@ def adb_uninstall(package_name: str):
         return False
 
 
-def adb_install(filepath: str, mode: str):
+def adb_install(filepath: str, mode: str = ''):
     """
     通过adb命令安装指定安装包
     :param filepath:安装包文件路径（包括具体的文件名称）
+    :param mode:安装包文件路径（包括具体的文件名称）
     :return:
     """
-    script = 'adb install -r %s' % filepath
+    if mode =='':
+        script = 'adb install %s' % filepath
+    else:
+        script = 'adb install - ' + mode + ' %s' % filepath
     execute_script = os_popen(script)
     if 'Success' in execute_script:
         log.info('安装应用成功，安装包路径：%s' % filepath)
@@ -276,4 +280,5 @@ def adb_phone_imei():
 if __name__ == '__main__':
     print(adb_install('C:\\Users\\Administrator\\Downloads\\0b1214b56924b106bbf0ceef30b570db.apk'))
     # print(check_package_process_state('com.kh_super.android.supermerchant'))
+
 

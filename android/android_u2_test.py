@@ -31,6 +31,7 @@ class U2Test(unittest.TestCase, U2Driver):
             self.driver = start_u2_server()
 
         if not check_screen_state():
+            # 判断当前手机屏幕是否处于关闭状态，若关闭则执行上滑解锁的操作
             dr = U2Driver(self.driver)
             dr.swipe_up()
 

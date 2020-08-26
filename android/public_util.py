@@ -17,7 +17,7 @@ class Config():
 
     def read_config(self, config_path: str = ''):
         """
-
+        读取配置文件内容
         :param config_path:
         :return:
         """
@@ -27,7 +27,7 @@ class Config():
 
     def update_config(self, update_data: str, section: str = 'android_test', option: str = 'auto_test_package'):
         """
-
+        更新配置文件内容
         :param update_data:
         :param section:
         :param option:
@@ -41,7 +41,7 @@ class Config():
 
     def get_config_info(self, section: str, option: str):
         """
-
+        获取配置文件中的[section]下option键对应的值
         :param section:
         :param option:
         :return:
@@ -56,5 +56,4 @@ class Config():
 
 if __name__ == '__main__':
     test = Config()
-
     test.update_config(update_data='com.kh_super.android.supermerchant')
