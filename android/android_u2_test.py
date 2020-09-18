@@ -12,7 +12,7 @@ from android.adb_util import check_package_install_state, check_package_process_
 log = Log()
 
 
-class U2Test(unittest.TestCase, U2Driver):
+class U2BaseCase(unittest.TestCase, U2Driver):
     conf = Config()
     test_package = conf.get_config_info(section='android_test', option='auto_test_package')
     log = Log()

@@ -1,22 +1,24 @@
 import seldom
 from android.adb_util import os_popen
+from android.android_u2_test import U2BaseCase
 from android.u2driver import U2Driver
-from android.android_u2_test import U2Test
 from pageobject.u2 import Page, PageElement
 
 
-class MerchantOrderPage(Page):
+class NewOrderPage(Page):
     """Baidu serach test case"""
 
+    # processing_btn = {'text': 'processing'}
+    # set_prepared = {'resourceId': 'com.kh_super.android.supermerchant:id/switch_order'}
     switch_order = {'resourceId': 'com.kh_super.android.supermerchant:id/switch_order'}
     # search_button = PageElement(xpath='//*[@id="su"]')
 
-    switch_order_page = PageElement(describe='自动接单开关', **switch_order)
+    automatic_order_switch = PageElement(**switch_order)
 
 
-class MerchantTest(U2Test):
+class NewOrderTest(U2BaseCase):
     """
-
+    打开/关闭自动接单功能
     """
 
     # @data([
@@ -30,8 +32,8 @@ class MerchantTest(U2Test):
         :return:
         """
 
-        page = MerchantOrderPage(self.driver)
-        page.switch_order_page.click()
+        page = NewOrderPage(self.driver)
+        page.automatic_order_switch.click(text='自动接单开关')
 
 
 if __name__ == '__main__':
