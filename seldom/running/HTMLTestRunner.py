@@ -813,7 +813,7 @@ class _TestResult(TestResult):
             sys.stderr.write(str(test))
             sys.stderr.write('\n')
         else:
-            sys.stderr.write('.\n' + str(self.success_count))
+            sys.stderr.write('.\n' + str(self.success_count) + '\n')
 
     def addError(self, test, err):
         self.error_count += 1
