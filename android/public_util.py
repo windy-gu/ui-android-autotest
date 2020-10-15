@@ -11,7 +11,7 @@ log = Log()
 
 class Config():
 
-    def __init__(self, filepath: str = '\\config\\config.ini'):
+    def __init__(self, filepath: str = '/config/config.ini'):
         self.config_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + filepath
         self.conf = configparser.ConfigParser()
 

@@ -16,6 +16,7 @@ class U2BaseCase(unittest.TestCase, U2Driver):
     conf = Config()
     test_package = conf.get_config_info(section='android_test', option='auto_test_package')
     log = Log()
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.driver = start_u2_server()
