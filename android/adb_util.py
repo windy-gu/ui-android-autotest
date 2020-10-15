@@ -37,10 +37,10 @@ def check_package_install_state(package_name: str):
     """
     script = 'adb shell "pm list package -3 | grep %s"' % package_name
     if package_name in os_popen(script):
-        log.info('当前测试手机中存在应用，包名：%s' % package_name)
+        print('当前测试手机中存在应用，包名：%s' % package_name)
         return True
     else:
-        log.warn('当前测试手机未找到应用，包名：%s' % package_name)
+        print('当前测试手机未找到应用，包名：%s' % package_name)
         return False
 
 

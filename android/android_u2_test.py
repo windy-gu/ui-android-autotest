@@ -46,16 +46,16 @@ def start_u2_server():
     device_num = get_devices_data[1]
 
     if device_num == 1:
-        log.info('连接设备：' + device_name + ',连接设备数量：' + str(device_num))
+        print('连接设备：' + device_name + ',连接设备数量：' + str(device_num))
         driver = u2.connect(device_name)
         return driver
 
     elif device_num > 1:
-        log.error('连接设备数量>1，请核对需要具体连接的设备后重新执行程序')
+        print('连接设备数量>1，请核对需要具体连接的设备后重新执行程序')
         raise Exception('测试设备异常：可用设备大于1')
 
     else:
-        log.error('设备未连接，请连接手机设备后重新执行程序')
+        print('设备未连接，请连接手机设备后重新执行程序')
         raise Exception('测试设备异常：未连接手机')
 
 
